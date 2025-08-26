@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 type Props = {
-    space: Space;
-    list?: List;
+  space: { id: string; slug: string; name: string };
+  list?: { id: string; title: string };
 };
 
 export default function BreadCrumb({ space, list }: Props) {

@@ -42,6 +42,7 @@ model Space {
     slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
     members   SpaceUser[]
     lists     List[]
+    tasks     Task[]  
     
     // require login
     @@deny('all', auth() == null)
@@ -102,6 +103,7 @@ model User {
     image         String?     @url
     lists         List[]
     todos         Todo[]
+    tasks     Task[]  
 
     // next-auth
     accounts      Account[]
@@ -155,6 +157,21 @@ model List extends BaseEntity {
 /**
  * Model for a single Todo
  */
+
+ model Task {
+  id          String @id @default(cuid())
+  title       String @length(1, 80)
+  description String?
+  space       Space  @relation(fields: [spaceId], references: [id])
+  spaceId     String
+  owner       User   @relation(fields: [ownerId], references: [id])
+  ownerId     String @default(auth().id)
+  todos       Todo[]
+
+  @@deny('all', auth() == null)
+  @@allow('read', space.members?[user == auth()])
+  @@allow('create,update,delete', owner == auth() && space.members?[user == auth()])
+}
 model Todo {
     id          String    @id @default(uuid())
     createdAt   DateTime  @default(now())
@@ -163,7 +180,10 @@ model Todo {
     ownerId     String    @default(auth().id)
     list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
     listId      String
-    title       String    @length(1, 100)
+
+    task        Task      @relation(fields: [taskId], references: [id])
+    taskId      String
+    
     completedAt DateTime?
 
     // full access if the parent list is readable

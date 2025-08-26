@@ -6,7 +6,7 @@ type Props = {
 
 export default function TimeInfo({ value }: Props) {
     return (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-white-500">
             {value.completedAt
                 ? `Completed ${moment(value.completedAt).fromNow()}`
                 : value.createdAt === value.updatedAt

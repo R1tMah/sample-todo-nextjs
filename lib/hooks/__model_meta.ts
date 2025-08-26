@@ -55,6 +55,12 @@ const metadata = {
                     isDataModel: true,
                     isArray: true,
                     backLink: 'space',
+                }, tasks: {
+                    name: "tasks",
+                    type: "Task",
+                    isDataModel: true,
+                    isArray: true,
+                    backLink: 'space',
                 },
             }, uniqueConstraints: {
                 id: {
@@ -179,6 +185,12 @@ const metadata = {
                     isDataModel: true,
                     isArray: true,
                     backLink: 'owner',
+                }, tasks: {
+                    name: "tasks",
+                    type: "Task",
+                    isDataModel: true,
+                    isArray: true,
+                    backLink: 'owner',
                 }, accounts: {
                     name: "accounts",
                     type: "Account",
@@ -260,6 +272,60 @@ const metadata = {
                 },
             },
         },
+        task: {
+            name: 'Task', fields: {
+                id: {
+                    name: "id",
+                    type: "String",
+                    isId: true,
+                    attributes: [{ "name": "@default", "args": [{ "name": "value" }] }],
+                }, title: {
+                    name: "title",
+                    type: "String",
+                }, description: {
+                    name: "description",
+                    type: "String",
+                    isOptional: true,
+                }, space: {
+                    name: "space",
+                    type: "Space",
+                    isDataModel: true,
+                    backLink: 'tasks',
+                    isRelationOwner: true,
+                    foreignKeyMapping: { "id": "spaceId" },
+                }, spaceId: {
+                    name: "spaceId",
+                    type: "String",
+                    isForeignKey: true,
+                    relationField: 'space',
+                }, owner: {
+                    name: "owner",
+                    type: "User",
+                    isDataModel: true,
+                    backLink: 'tasks',
+                    isRelationOwner: true,
+                    foreignKeyMapping: { "id": "ownerId" },
+                }, ownerId: {
+                    name: "ownerId",
+                    type: "String",
+                    attributes: [{ "name": "@default", "args": [{ "name": "value" }] }],
+                    defaultValueProvider: $default$Task$ownerId,
+                    isForeignKey: true,
+                    relationField: 'owner',
+                }, todos: {
+                    name: "todos",
+                    type: "Todo",
+                    isDataModel: true,
+                    isArray: true,
+                    backLink: 'task',
+                },
+            }, uniqueConstraints: {
+                id: {
+                    name: "id",
+                    fields: ["id"]
+                },
+            },
+        },
         todo: {
             name: 'Todo', fields: {
                 id: {
@@ -303,9 +369,18 @@ const metadata = {
                     type: "String",
                     isForeignKey: true,
                     relationField: 'list',
-                }, title: {
-                    name: "title",
+                }, task: {
+                    name: "task",
+                    type: "Task",
+                    isDataModel: true,
+                    backLink: 'todos',
+                    isRelationOwner: true,
+                    foreignKeyMapping: { "id": "taskId" },
+                }, taskId: {
+                    name: "taskId",
                     type: "String",
+                    isForeignKey: true,
+                    relationField: 'task',
                 }, completedAt: {
                     name: "completedAt",
                     type: "DateTime",
@@ -407,6 +482,10 @@ function $default$Space$ownerId(user: any): unknown {
 }
 
 function $default$List$ownerId(user: any): unknown {
+    return user?.id;
+}
+
+function $default$Task$ownerId(user: any): unknown {
     return user?.id;
 }
 

@@ -6,7 +6,21 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Provider as ZenStackHooksProvider } from '../lib/hooks';
 import { Analytics } from '@vercel/analytics/react';
+import { Barlow, League_Spartan } from 'next/font/google';
 import '../styles/globals.css';
+export const taskBody = Barlow({
+  subsets: ['latin'],
+  weight: ['400','600'],
+  variable: '--font-task-body',
+  display: 'swap',
+});
+
+export const taskTitle = League_Spartan({
+  subsets: ['latin'],
+  weight: ['600','700'],
+  variable: '--font-task-title',
+  display: 'swap',
+});
 
 function AppContent(props: { children: JSX.Element | JSX.Element[] }) {
     const user = useCurrentUser();
@@ -29,7 +43,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             <SessionProvider session={session}>
                 <ZenStackHooksProvider value={{ endpoint: '/api/model' }}>
                     <AppContent>
-                        <div className="flex-grow h-100 bg-white">
+                        <div className={`${taskBody.variable} ${taskTitle.variable}`}>
                             <Component {...pageProps} />
                             <ToastContainer position="top-center" autoClose={2000} hideProgressBar={true} />
                         </div>

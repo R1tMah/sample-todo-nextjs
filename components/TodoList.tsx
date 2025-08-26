@@ -43,9 +43,9 @@ export default function TodoList({ value }: Props) {
             </Link>
             <div className="card-body">
                 <Link href={`${router.asPath}/${value.id}`}>
-                    <h2 className="card-title line-clamp-1">{value.title || 'Missing Title'}</h2>
+                    <h2 className="font-serif card-title line-clamp-1">{value.title || 'Missing Title'}</h2>
                 </Link>
-                <div className="card-actions flex w-full justify-between">
+                <div className="font-serif card-actions flex w-full justify-between">
                     <div>
                         <TimeInfo value={value} />
                     </div>
